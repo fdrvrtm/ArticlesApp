@@ -1,0 +1,223 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="arfedorov (generated)" id="1571299349909-1">
+        <createTable tableName="article">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Article_pkey"/>
+            </column>
+            <column name="caption" type="TEXT"/>
+            <column name="description" type="TEXT"/>
+            <column name="content" type="TEXT"/>
+            <column defaultValueNumeric="0.0" name="price" type="FLOAT8"/>
+            <column name="author_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-2">
+        <createTable tableName="permission">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Permission_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-3">
+        <createTable tableName="role">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Role_pkey"/>
+            </column>
+            <column name="description" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-4">
+        <createTable tableName="role_permission">
+            <column autoIncrement="true" name="role_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="role_permission_pkey"/>
+            </column>
+            <column autoIncrement="true" name="permission_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="role_permission_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-5">
+        <createTable tableName="tag">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Tag_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-6">
+        <createTable tableName="tag_article">
+            <column autoIncrement="true" name="tag_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Tag_Article_pkey"/>
+            </column>
+            <column autoIncrement="true" name="article_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Tag_Article_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-7">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_pkey"/>
+            </column>
+            <column name="username" type="VARCHAR(30)"/>
+            <column name="email" type="VARCHAR(30)"/>
+            <column name="password" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-8">
+        <createTable tableName="user_article">
+            <column autoIncrement="true" name="user_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Article_pkey"/>
+            </column>
+            <column autoIncrement="true" name="article_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Article_pkey"/>
+            </column>
+            <column name="owned" type="VARCHAR(30)"/>
+            <column name="liked" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-9">
+        <createTable tableName="user_role">
+            <column autoIncrement="true" name="user_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Role_pkey"/>
+            </column>
+            <column autoIncrement="true" name="role_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Role_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-10">
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="tag_article" constraintName="Article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-11">
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="tag_article" constraintName="Tag" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tag" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-12">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="User" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-13">
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="article" constraintName="author" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-14">
+        <addForeignKeyConstraint baseColumnNames="permission_id" baseTableName="role_permission" constraintName="permission" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="permission" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571299349909-15">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="role_permission" constraintName="role" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="role" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-1">
+        <createTable tableName="article">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Article_pkey"/>
+            </column>
+            <column name="caption" type="TEXT"/>
+            <column name="description" type="TEXT"/>
+            <column name="content" type="TEXT"/>
+            <column defaultValueNumeric="0.0" name="price" type="FLOAT8"/>
+            <column name="author_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-2">
+        <createTable tableName="permission">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Permission_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-3">
+        <createTable tableName="role">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Role_pkey"/>
+            </column>
+            <column name="description" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-4">
+        <createTable tableName="role_permission">
+            <column autoIncrement="true" name="role_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="role_permission_pkey"/>
+            </column>
+            <column autoIncrement="true" name="permission_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="role_permission_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-5">
+        <createTable tableName="tag">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Tag_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-6">
+        <createTable tableName="tag_article">
+            <column autoIncrement="true" name="tag_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Tag_Article_pkey"/>
+            </column>
+            <column autoIncrement="true" name="article_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="Tag_Article_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-7">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_pkey"/>
+            </column>
+            <column name="username" type="VARCHAR(30)"/>
+            <column name="email" type="VARCHAR(30)"/>
+            <column name="password" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-8">
+        <createTable tableName="user_article">
+            <column autoIncrement="true" name="user_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Article_pkey"/>
+            </column>
+            <column autoIncrement="true" name="article_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Article_pkey"/>
+            </column>
+            <column name="owned" type="VARCHAR(30)"/>
+            <column name="liked" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-9">
+        <createTable tableName="user_role">
+            <column autoIncrement="true" name="user_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Role_pkey"/>
+            </column>
+            <column autoIncrement="true" name="role_id" type="INTEGER">
+                <constraints primaryKey="true" primaryKeyName="User_Role_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-10">
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="tag_article" constraintName="Article" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="article" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-11">
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="tag_article" constraintName="Tag" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="tag" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-12">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="User" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-13">
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="article" constraintName="author" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-14">
+        <addForeignKeyConstraint baseColumnNames="permission_id" baseTableName="role_permission" constraintName="permission" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="permission" validate="true"/>
+    </changeSet>
+    <changeSet author="arfedorov (generated)" id="1571305023291-15">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="role_permission" constraintName="role" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="role" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
