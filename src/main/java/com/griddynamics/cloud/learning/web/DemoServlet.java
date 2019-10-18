@@ -1,4 +1,4 @@
-package com.griddynamics.cloud.learning;
+package com.griddynamics.cloud.learning.web;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 
 @WebServlet
 public class DemoServlet extends HttpServlet {
@@ -18,4 +17,3 @@ public class DemoServlet extends HttpServlet {
         out.println("<h3>Hello World!</h3>");
     }
 }
-
