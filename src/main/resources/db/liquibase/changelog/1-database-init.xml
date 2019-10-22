@@ -1,0 +1,154 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <preConditions onFail="WARN">
+        <not>
+            <foreignKeyConstraintExists schemaName="public" foreignKeyName="fk_article_user"/>
+        </not>
+    </preConditions>
+
+    <changeSet author="arfedorov" id="1-database-init">
+        <createTable tableName="article">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="article_pkey"/>
+            </column>
+            <column name="caption" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="content" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0.0" name="price" type="FLOAT8"/>
+            <column name="author_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="permission">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="permission_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="role">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="role_pkey"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="role_permission">
+            <column name="role_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="role_permission_pkey"/>
+            </column>
+            <column name="permission_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="role_permission_pkey"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="tag">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tag_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="tag_article">
+            <column name="tag_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tag_article_pkey"/>
+            </column>
+            <column name="article_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="tag_article_pkey"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_article">
+            <column name="user_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_article_pkey"/>
+            </column>
+            <column name="article_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_article_pkey"/>
+            </column>
+            <column name="owned" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="liked" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_role">
+            <column name="user_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_role_pkey"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_role_pkey"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="tag_article"
+                                 constraintName="fk_tag_article2article"
+                                 referencedColumnNames="id" referencedTableName="article"/>
+
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="tag_article"
+                                 constraintName="fk_tag_article2tag"
+                                 referencedColumnNames="id" referencedTableName="tag"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="fk_user_role2user"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role" constraintName="fk_user_role2role"
+                                 referencedColumnNames="id" referencedTableName="role"/>
+
+        <addForeignKeyConstraint baseColumnNames="permission_id" baseTableName="role_permission"
+                                 constraintName="fk_role_permission2permission" referencedColumnNames="id"
+                                 referencedTableName="permission"/>
+
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="role_permission"
+                                 constraintName="fk_role_permission2role"
+                                 referencedColumnNames="id" referencedTableName="role"/>
+
+        <addForeignKeyConstraint baseColumnNames="article_id" baseTableName="user_article"
+                                 constraintName="fk_user_article2article"
+                                 referencedColumnNames="id" referencedTableName="article"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_article"
+                                 constraintName="fk_user_article2user"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="article" constraintName="fk_article_user"
+                                 referencedColumnNames="id" referencedTableName="user"/>
+    </changeSet>
+</databaseChangeLog>
