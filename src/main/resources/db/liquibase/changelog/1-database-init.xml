@@ -32,6 +32,9 @@
             <column name="currency" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="date" type="DATETIME" defaultValueComputed="CURRENT_DATE">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createTable tableName="permission">
