@@ -156,5 +156,14 @@
 
         <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="article" constraintName="fk_article_user"
                                  referencedColumnNames="id" referencedTableName="user"/>
+        
+        <createIndex tableName="article" indexName="article_caption_index">
+            <column>caption</column>
+        </createIndex>
+
+        <createIndex tableName="article" indexName="article_date_index">
+            <column>date</column>
+        </createIndex>
+
     </changeSet>
 </databaseChangeLog>
