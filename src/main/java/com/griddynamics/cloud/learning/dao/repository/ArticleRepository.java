@@ -2,7 +2,7 @@ package com.griddynamics.cloud.learning.dao.repository;
 
 import com.griddynamics.cloud.learning.dao.domain.Article;
 import com.griddynamics.cloud.learning.dao.domain.PaginatedResult;
-import com.griddynamics.cloud.learning.web.dto.ArticlePaginatedRequestParams;
+import com.griddynamics.cloud.learning.web.dto.PaginatedRequestParams;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,61 +49,61 @@ public class ArticleRepository extends Repository<Article> {
         return Article.ARTICLE_TABLE;
     }
 
-    public PaginatedResult<Article> getArticles(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticles(final PaginatedRequestParams params) {
         String querySelector = "SELECT *";
         String queryCondition = "FROM article";
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByPurchaseType(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticlesByPurchaseType(final PaginatedRequestParams params, final Boolean isFree) {
         String querySelector = "SELECT *";
-        String queryCondition = "FROM article WHERE free = " + params.getIsFree();
+        String queryCondition = "FROM article WHERE free = " + isFree;
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByTag(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticlesByTag(final PaginatedRequestParams params, final String tag) {
         String querySelector = "SELECT a.id, a.caption, a.description, a.content, a.price, a.author_id, a.currency, a.date, a.free";
         String queryCondition = "FROM article AS a INNER JOIN tag_article AS ta ON a.id = ta.article_id "
                 + "INNER JOIN tag AS t ON ta.tag_id = t.id "
-                + "WHERE t.name = \'" + params.getTag() + "\'";
+                + "WHERE t.name = \'" + tag + "\'";
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTag(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTag(final PaginatedRequestParams params, final String tag, final Boolean isFree) {
         String querySelector = "SELECT a.id, a.caption, a.description, a.content, a.price, a.author_id, a.currency, a.date, a.free";
         String queryCondition = "FROM article AS a INNER JOIN tag_article AS ta ON a.id = ta.article_id "
                 + "INNER JOIN tag AS t ON ta.tag_id = t.id "
-                + "WHERE t.name = \'" + params.getTag() + "\' AND free = " + params.getIsFree();
+                + "WHERE t.name = \'" + tag + "\' AND free = " + isFree;
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByCaption(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticlesByCaption(final PaginatedRequestParams params, final String caption) {
         String querySelector = "SELECT *";
-        String queryCondition = "FROM article WHERE caption LIKE '%" + params.getCaption() + "%'";
+        String queryCondition = "FROM article WHERE caption LIKE '%" + caption + "%'";
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByPurchaseTypeAndCaption(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticlesByPurchaseTypeAndCaption(final PaginatedRequestParams params, final Boolean free, final String caption) {
         String querySelector = "SELECT *";
-        String queryCondition = "FROM article WHERE free = " + params.getIsFree() + " AND caption LIKE '%"
-                + params.getCaption() + "%'";
+        String queryCondition = "FROM article WHERE free = " + free + " AND caption LIKE '%"
+                + caption + "%'";
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByTagAndCaption(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticlesByTagAndCaption(final PaginatedRequestParams params, final String tag, final String caption) {
         String querySelector = "SELECT a.id, a.caption, a.description, a.content, a.price, a.author_id, a.currency, a.date, a.free";
         String queryCondition = "FROM article AS a INNER JOIN tag_article AS ta ON a.id = ta.article_id "
                 + "INNER JOIN tag AS t ON ta.tag_id = t.id "
-                + "WHERE t.name = \'" + params.getTag() + "\' AND caption LIKE '%" + params.getCaption() + "%'";
+                + "WHERE t.name = \'" + tag + "\' AND caption LIKE '%" + caption + "%'";
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTagAndCaption(final ArticlePaginatedRequestParams params) {
+    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTagAndCaption(final PaginatedRequestParams params, final String tag, final String caption, final Boolean isFree) {
         String querySelector = "SELECT a.id, a.caption, a.description, a.content, a.price, a.author_id, a.currency, a.date, a.free";
         String queryCondition = "FROM article AS a INNER JOIN tag_article AS ta ON a.id = ta.article_id "
                 + "INNER JOIN tag AS t ON ta.tag_id = t.id "
-                + "WHERE t.name = \'" + params.getTag() + "\' AND caption LIKE '%" + params.getCaption()
-                + "%' AND free = " + params.getIsFree();
+                + "WHERE t.name = \'" + tag + "\' AND caption LIKE '%" + caption
+                + "%' AND free = " + isFree;
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 }

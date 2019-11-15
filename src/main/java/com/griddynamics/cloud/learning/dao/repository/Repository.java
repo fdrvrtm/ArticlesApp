@@ -44,7 +44,7 @@ public abstract class Repository<T extends DomainEntity> {
         final Integer startRow = (params.getPageNumber() - 1) * params.getLimitPerPage();
         final String countQuery = "SELECT COUNT(*) " + queryCondition + ";";
         final String paginatedOrderedQuery = querySelector + " " + queryCondition
-                + " ORDER BY " + params.getOrderBy() + " " + params.getSortDirection()
+                + " ORDER BY " + params.getOrderBy().toString().toLowerCase() + " " + params.getSortDirection()
                 + " LIMIT " + params.getLimitPerPage() + " OFFSET " + startRow + ";";
 
         try (Connection connection = DBConnectionManager.getConnection()) {
