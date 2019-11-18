@@ -8,14 +8,4 @@
          id="WebApp_ID" version="3.0">
 
     <display-name>Grid Dynamics Cloud Learning</display-name>
-
-    <servlet>
-        <servlet-name>DemoServlet</servlet-name>
-        <servlet-class>com.griddynamics.cloud.learning.web.DemoServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>DemoServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
 </web-app>
