@@ -1,6 +1,5 @@
 package com.griddynamics.cloud.learning.web;
 
-import com.griddynamics.cloud.learning.dao.domain.Article;
 import com.griddynamics.cloud.learning.dao.domain.PaginatedResult;
 import com.griddynamics.cloud.learning.service.ArticleService;
 import com.griddynamics.cloud.learning.web.dto.*;
@@ -27,7 +26,7 @@ public class ArticleServlet extends HttpServlet {
         try {
             ArticleFilterRequest filter = getArticleRequestFilter(req);
 
-            PaginatedResult<Article> articles = articleService.getArticles(filter);
+            PaginatedResult<ArticleDto> articles = articleService.findArticles(filter);
             resp.getWriter().print(articles);
         } catch (IllegalArgumentException e) {
             resp.sendError(400, "Check request parameters for validity");

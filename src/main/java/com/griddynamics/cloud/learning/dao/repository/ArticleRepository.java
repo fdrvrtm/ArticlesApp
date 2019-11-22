@@ -69,7 +69,7 @@ public class ArticleRepository extends Repository<Article> {
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTag(final PaginatedRequestParams params, final String tag, final Boolean isFree) {
+    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTag(final PaginatedRequestParams params, final Boolean isFree, final String tag) {
         String querySelector = "SELECT a.id, a.caption, a.description, a.content, a.price, a.author_id, a.currency, a.date, a.free";
         String queryCondition = "FROM article AS a INNER JOIN tag_article AS ta ON a.id = ta.article_id "
                 + "INNER JOIN tag AS t ON ta.tag_id = t.id "
@@ -98,7 +98,7 @@ public class ArticleRepository extends Repository<Article> {
         return getPaginatedEntities(querySelector, queryCondition, params);
     }
 
-    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTagAndCaption(final PaginatedRequestParams params, final String tag, final String caption, final Boolean isFree) {
+    public PaginatedResult<Article> getArticlesByPurchaseTypeAndTagAndCaption(final PaginatedRequestParams params, final Boolean isFree, final String tag, final String caption) {
         String querySelector = "SELECT a.id, a.caption, a.description, a.content, a.price, a.author_id, a.currency, a.date, a.free";
         String queryCondition = "FROM article AS a INNER JOIN tag_article AS ta ON a.id = ta.article_id "
                 + "INNER JOIN tag AS t ON ta.tag_id = t.id "

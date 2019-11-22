@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PaginatedResult<T extends DomainEntity> {
+public class PaginatedResult<T> {
 
     private final List<T> entities;
     private final Integer rowsCount;
