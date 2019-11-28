@@ -1,32 +1,22 @@
 package com.griddynamics.cloud.learning.dao.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class Article extends DomainEntity {
+@Entity(name = "article")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Article {
 
-    public static final String ARTICLE_TABLE = "article";
-
-    @Builder
-    public Article(Long id, String caption, String description, String content, Double price,
-                   Long authorId, String currency, LocalDateTime date, Boolean isFree) {
-        super(id);
-        this.caption = caption;
-        this.description = description;
-        this.content = content;
-        this.price = price;
-        this.authorId = authorId;
-        this.currency = currency;
-        this.date = date;
-        this.isFree = isFree;
-    }
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private String caption;
 
@@ -36,11 +26,13 @@ public class Article extends DomainEntity {
 
     private Double price;
 
-    private final Long authorId;
+    @Column(name = "author_id")
+    private Long authorId;
 
     private String currency;
 
-    private final LocalDateTime date;
+    private LocalDateTime date;
 
+    @Column(name = "free")
     private Boolean isFree;
 }
