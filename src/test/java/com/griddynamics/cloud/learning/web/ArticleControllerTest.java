@@ -1,6 +1,6 @@
-package com.griddynamics.cloud.learning.service;
+package com.griddynamics.cloud.learning.web;
 
-import com.griddynamics.cloud.learning.web.ArticleController;
+import com.griddynamics.cloud.learning.service.ArticleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,19 +25,19 @@ public class ArticleControllerTest {
 
     @Test
     public void shouldReturnBadRequestWhenTypeisInvalid() throws Exception {
-        ResultActions resultActions = this.mockMvc.perform(get("/articles?type=None"))
+        this.mockMvc.perform(get("/articles?type=None"))
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
     }
 
     @Test
     public void shouldReturnBadRequestWhenTypeIsMissed() throws Exception {
-        this.mockMvc.perform(get("/articles?caption=CAPTION&tag=TAG&page=5&limit=20"))
+        this.mockMvc.perform(get("/articles?caption=CAPTION&tag=TAG&page=5&size=20"))
                 .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
     }
 
     @Test
     public void shouldReturnOkWhenAllFieldsAreValid() throws Exception {
-        this.mockMvc.perform(get("/articles?type=ALL&caption=CAPTION&tag=TAG&page=5&limit=20&sort=date,desc"))
+        this.mockMvc.perform(get("/articles?type=ALL&caption=CAPTION&tag=TAG&page=5&size=20&sort=date,desc"))
                 .andExpect(status().is(HttpStatus.OK.value()));
     }
 
