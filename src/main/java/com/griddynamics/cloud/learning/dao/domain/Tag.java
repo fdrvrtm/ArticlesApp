@@ -1,20 +1,22 @@
 package com.griddynamics.cloud.learning.dao.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class Tag extends DomainEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity(name = "tag")
+public class Tag {
 
-    public static final String TAG_TABLE = "tag";
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private String name;
-
-    public Tag(Long id, String name) {
-        super(id);
-        this.name = name;
-    }
 }
