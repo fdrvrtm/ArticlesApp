@@ -5,5 +5,6 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <include file="db/liquibase/changelog/1-database-init.xml"/>
+    <include file="db/liquibase/changelog/2-drop-unused-tables-and-alter-role-and-user_data-tables.xml"/>
 
 </databaseChangeLog>
