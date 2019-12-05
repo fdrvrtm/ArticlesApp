@@ -1,16 +1,16 @@
 package com.griddynamics.cloud.learning.dao.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity(name = "tag")
 public class Tag {
 
@@ -19,4 +19,7 @@ public class Tag {
     private Long id;
 
     private String name;
+
+    @ManyToMany(mappedBy = "tags", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Article> articles = new HashSet<>();
 }

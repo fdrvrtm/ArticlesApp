@@ -1,11 +1,11 @@
 package com.griddynamics.cloud.learning.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import java.util.Set;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,4 +16,5 @@ public class ArticleDto {
     private Double price;
     private String currency;
     private Boolean isFree;
+    private Set<String> tags;
 }
