@@ -7,13 +7,14 @@
                    http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <preConditions onFail="WARN">
-        <not>
-            <foreignKeyConstraintExists schemaName="public" foreignKeyName="fk_article_user"/>
-        </not>
-    </preConditions>
-
     <changeSet author="arfedorov" id="1-database-init">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="article" indexName="article_date_index" columnNames="date"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="article">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="article_pkey"/>
@@ -53,7 +54,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="role_pkey"/>
             </column>
-            <column name="description" type="VARCHAR(255)">
+            <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -85,9 +86,9 @@
             </column>
         </createTable>
 
-        <createTable tableName="user">
+        <createTable tableName="user_data">
             <column autoIncrement="true" name="id" type="BIGINT">
-                <constraints primaryKey="true" primaryKeyName="user_pkey"/>
+                <constraints primaryKey="true" primaryKeyName="user_data_pkey"/>
             </column>
             <column name="username" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -133,7 +134,7 @@
                                  referencedColumnNames="id" referencedTableName="tag"/>
 
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="fk_user_role2user"
-                                 referencedColumnNames="id" referencedTableName="user"/>
+                                 referencedColumnNames="id" referencedTableName="user_data"/>
 
         <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role" constraintName="fk_user_role2role"
                                  referencedColumnNames="id" referencedTableName="role"/>
@@ -152,17 +153,19 @@
 
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_article"
                                  constraintName="fk_user_article2user"
-                                 referencedColumnNames="id" referencedTableName="user"/>
+                                 referencedColumnNames="id" referencedTableName="user_data"/>
 
         <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="article" constraintName="fk_article_user"
-                                 referencedColumnNames="id" referencedTableName="user"/>
+                                 referencedColumnNames="id" referencedTableName="user_data"/>
         
+        <createSequence sequenceName="common_id_seq" startValue="1" incrementBy="1"  dataType="BIGINT"/>
+
         <createIndex tableName="article" indexName="article_caption_index">
-            <column>caption</column>
+            <column name="caption"/>
         </createIndex>
 
         <createIndex tableName="article" indexName="article_date_index">
-            <column>date</column>
+            <column name="date"/>
         </createIndex>
 
     </changeSet>

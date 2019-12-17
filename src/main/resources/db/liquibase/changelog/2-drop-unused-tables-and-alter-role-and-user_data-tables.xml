@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="arfedorov" id="2-drop-unused-tables-and-alter-role-and-user_data-tables">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_user2role" schemaName="public"/>
+            </not>
+        </preConditions>
+
+        <dropTable cascadeConstraints="true"
+                   tableName="permission"/>
+
+        <dropTable cascadeConstraints="true"
+                   tableName="role_permission"/>
+
+        <dropTable cascadeConstraints="true"
+                   tableName="user_role"/>
+
+        <addColumn tableName="role">
+            <column name="permissions" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="user_data">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_data" constraintName="fk_user2role"
+                                 referencedColumnNames="id" referencedTableName="role"/>
+
+    </changeSet>
+</databaseChangeLog>
