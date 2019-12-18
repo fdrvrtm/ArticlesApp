@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +17,8 @@ import java.util.Set;
 public class Article {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "common_id_generator")
+    @SequenceGenerator(name = "common_id_generator", sequenceName = "common_id_seq", allocationSize = 1)
     private Long id;
 
     private String caption;
@@ -27,8 +29,8 @@ public class Article {
 
     private Double price;
 
-    @Column(name = "author_id")
-    private Long authorId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User author;
 
     private String currency;
 
@@ -42,4 +44,7 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private Set<Tag> tags = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "article")
+    private Set<UserArticle> userArticles = new HashSet<>();
 }

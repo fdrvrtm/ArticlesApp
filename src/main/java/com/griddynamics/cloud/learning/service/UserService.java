@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public UserWithRolesDto saveUser(NewUserDto userToSaveDto) {
-        return save(userToSaveDto, EnumSet.of(Permission.PURCHASE_ARTICLE));
+        return save(userToSaveDto, EnumSet.of(Permission.LIKE_ARTICLE));
     }
 
     private UserWithRolesDto save(NewUserDto user, EnumSet<Permission> permissions) {

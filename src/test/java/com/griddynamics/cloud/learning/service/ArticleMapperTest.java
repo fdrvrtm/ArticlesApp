@@ -2,6 +2,7 @@ package com.griddynamics.cloud.learning.service;
 
 import com.griddynamics.cloud.learning.dao.domain.Article;
 import com.griddynamics.cloud.learning.dao.domain.Tag;
+import com.griddynamics.cloud.learning.dao.domain.User;
 import com.griddynamics.cloud.learning.web.dto.ArticleDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class ArticleMapperTest {
         final String description = "description";
         final String content = "content";
         final Double price = 3.5;
-        final Long authorId = 35L;
+        final User author = new User();
         final String usd = "usd";
         final LocalDateTime now = LocalDateTime.now();
         final Boolean isFree = false;
@@ -37,7 +38,7 @@ public class ArticleMapperTest {
         Tag secondTag = Tag.builder().id(17L).name("spring").build();
 
         Article initialEntity = Article.builder().id(id).caption(caption).description(description)
-                .content(content).price(price).authorId(authorId).currency(usd).date(now)
+                .content(content).price(price).author(author).currency(usd).date(now)
                 .isFree(isFree).tags(Set.of(firstTag, secondTag)).build();
 
         //when
