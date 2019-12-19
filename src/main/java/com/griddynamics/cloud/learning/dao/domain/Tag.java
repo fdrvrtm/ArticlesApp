@@ -15,7 +15,8 @@ import java.util.Set;
 public class Tag {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "common_id_generator")
+    @SequenceGenerator(name = "common_id_generator", sequenceName = "common_id_seq", allocationSize = 1)
     private Long id;
 
     private String name;

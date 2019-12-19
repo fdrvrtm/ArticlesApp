@@ -3,6 +3,8 @@ package com.griddynamics.cloud.learning.dao.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @EqualsAndHashCode
 @Getter
@@ -15,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "common_id_generator")
-    @SequenceGenerator(name="common_id_generator", sequenceName = "common_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "common_id_generator", sequenceName = "common_id_seq", allocationSize = 1)
     private Long id;
 
     private String username;
@@ -26,4 +28,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Role role;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<UserArticle> userArticles = new HashSet<>();
 }

@@ -35,10 +35,10 @@ public class UserDetailsServiceTest {
         final String username = "user";
         final String email = "user@gmail.com";
         final String password = "$2a$10$OSAs5O9bSvrAONTxZG7vgOa4JxcGRv8YY6Oh8Y0uCdlSHf6YIEr/6";
-        final Permission permission = Permission.PURCHASE_ARTICLE;
+        final Permission permission = Permission.LIKE_ARTICLE;
 
         final Role userRole = new Role(23L, "USER", EnumSet.of(permission));
-        final User user = new User(id, username, email, password, userRole);
+        final User user = new User(id, username, email, password, userRole, null);
         final Optional<User> userHolder = Optional.of(user);
 
         when(repository.findUserByUsername(username)).thenReturn(userHolder);
