@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,6 +22,7 @@ public class Tag {
 
     private String name;
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "tags", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Article> articles = new HashSet<>();
 }

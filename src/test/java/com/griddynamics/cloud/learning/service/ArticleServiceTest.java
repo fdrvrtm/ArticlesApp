@@ -1,21 +1,25 @@
 package com.griddynamics.cloud.learning.service;
 
-import com.griddynamics.cloud.learning.dao.domain.Article;
-import com.griddynamics.cloud.learning.dao.domain.Tag;
+import com.griddynamics.cloud.learning.dao.Permission;
+import com.griddynamics.cloud.learning.dao.domain.*;
 import com.griddynamics.cloud.learning.dao.repository.ArticleRepository;
+import com.griddynamics.cloud.learning.dao.repository.UserArticleRepository;
 import com.griddynamics.cloud.learning.web.dto.ArticleDto;
 import com.griddynamics.cloud.learning.web.dto.ArticleFilterRequest;
+import com.griddynamics.cloud.learning.web.dto.ArticleLikeDto;
 import com.griddynamics.cloud.learning.web.dto.PurchaseType;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -24,13 +28,30 @@ import static org.mockito.Mockito.*;
 public class ArticleServiceTest {
 
     @Mock
+    private UsernamePasswordAuthenticationToken authenticationToken;
+
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
     private ArticleRepository repository;
 
     @Mock
     private ArticleMapperImpl mapper;
 
+    @Mock
+    private UserArticleRepository userArticleRepository;
+
     @InjectMocks
     private ArticleService service;
+
+    @Before
+    public void init() {
+        when(securityContext.getAuthentication()).thenReturn(authenticationToken);
+        when(authenticationToken.getPrincipal()).thenReturn(
+                new SpringUserImpl(1L, "username", "email@gmail.com", "password", Collections.EMPTY_SET));
+        SecurityContextHolder.setContext(securityContext);
+    }
 
     @Test
     public void shouldGetAllArticles() {
@@ -298,5 +319,50 @@ public class ArticleServiceTest {
         assertEquals(8, articles.getTotalPages());
         assertEquals(1, articles.getContent().size());
         assertEquals(new HashSet<>(articles.getContent()), Set.of(expectedArticleDto1));
+    }
+
+    @Test
+    public void shouldLikeAnArticleWhenUserArticleExists() {
+        //given
+        final Long articleId = 29L;
+        final Boolean liked = Boolean.TRUE;
+        final ArticleLikeDto likeDto = new ArticleLikeDto(articleId, liked);
+        final Article article = Article.builder().id(articleId).caption("caption").content("content")
+                .isFree(false).price(2.5).currency("usd").build();
+        final Long userId = 1L;
+        final Role userRole = new Role(23L, "USER", EnumSet.of(Permission.LIKE_ARTICLE));
+        final User user = User.builder().id(userId).password("password").role(userRole).build();
+        final UserArticle userArticle = new UserArticle(user, article, Boolean.FALSE);
+        final Optional<UserArticle> uaHolder = Optional.of(userArticle);
+
+        when(userArticleRepository.getByUserIdAndArticleId(userId, articleId)).thenReturn(uaHolder);
+
+        //when
+        ArticleLikeDto likedArticleDto = service.likeAnArticle(likeDto);
+
+        //then
+        verify(userArticleRepository, times(1)).getByUserIdAndArticleId(userId, articleId);
+
+        assertEquals(articleId, likedArticleDto.getArticleId());
+        assertEquals(liked, likedArticleDto.getLiked());
+    }
+
+    @Test
+    public void shouldLikeAnArticleWhenUserArticleNotExists() {
+        //given
+        final Long articleId = 29L;
+        final Boolean liked = Boolean.TRUE;
+        final ArticleLikeDto likeDto = new ArticleLikeDto(articleId, liked);
+        final Long userId = 1L;
+
+        //when
+        ArticleLikeDto likedArticleDto = service.likeAnArticle(likeDto);
+
+        //then
+        verify(userArticleRepository, times(1)).getByUserIdAndArticleId(userId, articleId);
+        verify(userArticleRepository, times(1)).createNew(userId, articleId, liked);
+
+        assertEquals(articleId, likedArticleDto.getArticleId());
+        assertEquals(liked, likedArticleDto.getLiked());
     }
 }

@@ -3,7 +3,6 @@ package com.griddynamics.cloud.learning.service;
 import com.griddynamics.cloud.learning.dao.Permission;
 import com.griddynamics.cloud.learning.dao.domain.Role;
 import com.griddynamics.cloud.learning.dao.domain.User;
-import com.griddynamics.cloud.learning.dao.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.EnumSet;
 import java.util.Iterator;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -23,7 +21,7 @@ import static org.mockito.Mockito.*;
 public class UserDetailsServiceTest {
 
     @Mock
-    private UserRepository repository;
+    private UserService userService;
 
     @InjectMocks
     private UserDetailsServiceImpl service;
@@ -39,15 +37,14 @@ public class UserDetailsServiceTest {
 
         final Role userRole = new Role(23L, "USER", EnumSet.of(permission));
         final User user = new User(id, username, email, password, userRole, null);
-        final Optional<User> userHolder = Optional.of(user);
 
-        when(repository.findUserByUsername(username)).thenReturn(userHolder);
+        when(userService.getUserByUsername(username)).thenReturn(user);
 
         //when
         final UserDetails userDetails = service.loadUserByUsername(username);
 
         //then
-        verify(repository, times(1)).findUserByUsername(username);
+        verify(userService, times(1)).getUserByUsername(username);
 
         assertEquals(username, userDetails.getUsername());
         assertEquals(password, userDetails.getPassword());

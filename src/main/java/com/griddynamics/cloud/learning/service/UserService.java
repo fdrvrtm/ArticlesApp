@@ -5,6 +5,7 @@ import com.griddynamics.cloud.learning.dao.domain.Role;
 import com.griddynamics.cloud.learning.dao.domain.User;
 import com.griddynamics.cloud.learning.dao.repository.RoleRepository;
 import com.griddynamics.cloud.learning.dao.repository.UserRepository;
+import com.griddynamics.cloud.learning.web.UserNotFoundException;
 import com.griddynamics.cloud.learning.web.dto.NewUserDto;
 import com.griddynamics.cloud.learning.web.dto.UserWithRolesDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -76,5 +77,10 @@ public class UserService {
                 .email(user.getEmail())
                 .permissions(permissions)
                 .build();
+    }
+
+    public User getUserByUsername(String username) throws UserNotFoundException {
+        return userRepository.findUserByUsername(username).orElseThrow(
+                () -> new UserNotFoundException("No user found with username " + username));
     }
 }

@@ -29,6 +29,7 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Role role;
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<UserArticle> userArticles = new HashSet<>();
 }

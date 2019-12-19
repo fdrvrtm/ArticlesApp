@@ -36,6 +36,10 @@
             </column>
         </addColumn>
 
+        <addDefaultValue tableName="user_article" columnName="owned" defaultValueBoolean="false"/>
+
+        <addUniqueConstraint tableName="user_data" columnNames="username, password"/>
+
         <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_data" constraintName="fk_user2role"
                                  referencedColumnNames="id" referencedTableName="role"/>
 

@@ -1,8 +1,7 @@
 package com.griddynamics.cloud.learning.service;
 
+import com.griddynamics.cloud.learning.dao.domain.SpringUserImpl;
 import com.griddynamics.cloud.learning.dao.domain.User;
-import com.griddynamics.cloud.learning.dao.repository.UserRepository;
-import com.griddynamics.cloud.learning.web.UserNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,22 +15,21 @@ import java.util.stream.Collectors;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserRepository repository;
+    private UserService service;
 
-    public UserDetailsServiceImpl(UserRepository repository) {
-        this.repository = repository;
+    public UserDetailsServiceImpl(UserService service) {
+        this.service = service;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
-        User user = repository.findUserByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("No user found with username " + username));
+    public UserDetails loadUserByUsername(String username) {
+        User user = service.getUserByUsername(username);
 
         Set<GrantedAuthority> authorities = user.getRole().getPermissions().stream()
                 .map(p -> new SimpleGrantedAuthority(p.toString()))
                 .collect(Collectors.toSet());
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        return new SpringUserImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
     }
 }
