@@ -109,7 +109,7 @@ public class UserServiceTest {
         assertEquals(id, savedAndConvertedUser.getId());
         assertEquals(username, savedAndConvertedUser.getUsername());
         assertEquals(email, savedAndConvertedUser.getEmail());
-        assertEquals(1, savedAndConvertedUser.getPermissions().size());
+        assertEquals(2, savedAndConvertedUser.getPermissions().size());
 
         final String userPermission = savedAndConvertedUser.getPermissions().iterator().next();
         assertEquals(permission.toString(), userPermission);
