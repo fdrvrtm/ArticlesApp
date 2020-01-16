@@ -26,6 +26,7 @@ public class Role {
 
     private String name;
 
+    @EqualsAndHashCode.Exclude
     @Type(type = "jsonb")
     private EnumSet<Permission> permissions;
 }

@@ -3,43 +3,33 @@ package com.griddynamics.cloud.learning.dao.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Entity
+@Builder
 @Table(name = "user_article")
-public class UserArticle implements Serializable {
+public class UserArticle {
 
-    @Id
+    @EmbeddedId
+    private UserArticlePK userArticlePK;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @MapsId(value = "userId")
     private User user;
 
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id")
+    @MapsId(value = "articleId")
     private Article article;
 
     private Boolean owned;
 
     private Boolean liked;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(user.getId(), article.getId());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) { return true; }
-        if (!(obj instanceof UserArticle)) { return false; }
-
-        UserArticle that = (UserArticle) obj;
-        return Objects.equals(this.user.getId(), that.user.getId())
-                && Objects.equals(this.article.getId(), that.article.getId());
+    public UserArticle(User user, Article article, Boolean liked) {
+        this(new UserArticlePK(user.getId(), article.getId()), user, article, Boolean.FALSE, liked);
     }
 }

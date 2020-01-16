@@ -1,0 +1,13 @@
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# IntelliJ IDEA #
+*.iml
+.idea/
+
+# Maven #
+target/
+
+*.DS_Store

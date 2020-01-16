@@ -1,0 +1,15 @@
+spring:
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: password
+    url: jdbc:postgresql://localhost:5432/cloud_learning
+    username: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  sleuth:
+    sampler:
+      probability: 1.0

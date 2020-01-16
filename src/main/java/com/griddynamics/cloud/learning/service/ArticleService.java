@@ -1,14 +1,20 @@
 package com.griddynamics.cloud.learning.service;
 
 import com.griddynamics.cloud.learning.dao.domain.Article;
+import com.griddynamics.cloud.learning.dao.domain.SpringUserImpl;
 import com.griddynamics.cloud.learning.dao.repository.ArticleRepository;
+import com.griddynamics.cloud.learning.dao.repository.UserArticleRepository;
 import com.griddynamics.cloud.learning.web.dto.ArticleDto;
 import com.griddynamics.cloud.learning.web.dto.ArticleFilterRequest;
+import com.griddynamics.cloud.learning.web.dto.ArticleLikeDto;
 import com.griddynamics.cloud.learning.web.dto.PurchaseType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.stream.Collectors;
@@ -16,13 +22,16 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
 
-    private ArticleRepository repository;
+    private ArticleRepository articleRepository;
 
     private ArticleMapper articleMapper;
 
-    public ArticleService(ArticleRepository repository, ArticleMapper articleMapper) {
-        this.repository = repository;
+    private UserArticleRepository userArticleRepository;
+
+    public ArticleService(ArticleRepository articleRepository, ArticleMapper articleMapper, UserArticleRepository userArticleRepository) {
+        this.articleRepository = articleRepository;
         this.articleMapper = articleMapper;
+        this.userArticleRepository = userArticleRepository;
     }
 
     public Page<ArticleDto> findArticles(ArticleFilterRequest request, Pageable pageable) {
@@ -45,13 +54,13 @@ public class ArticleService {
         Page<Article> articles;
 
         if (StringUtils.isEmpty(tag) && StringUtils.isEmpty(caption)) {
-            articles = repository.findAll(pageable);
+            articles = articleRepository.findAll(pageable);
         } else if (!StringUtils.isEmpty(tag) && !StringUtils.isEmpty(caption)) {
-            articles = repository.findAllByTagAndCaption(tag, caption, pageable);
+            articles = articleRepository.findAllByTagAndCaption(tag, caption, pageable);
         } else if (!StringUtils.isEmpty(tag)) {
-            articles = repository.findAllByTag(tag, pageable);
+            articles = articleRepository.findAllByTag(tag, pageable);
         } else {
-            articles = repository.findAllByCaptionContaining(caption, pageable);
+            articles = articleRepository.findAllByCaptionContaining(caption, pageable);
         }
         return convertPage(articles);
     }
@@ -61,13 +70,13 @@ public class ArticleService {
         Page<Article> articles;
 
         if (StringUtils.isEmpty(tag) && StringUtils.isEmpty(caption)) {
-            articles = repository.findAllByIsFree(isFree, pageable);
+            articles = articleRepository.findAllByIsFree(isFree, pageable);
         } else if (!StringUtils.isEmpty(tag) && !StringUtils.isEmpty(caption)) {
-            articles = repository.findAllByIsFreeAndTagAndCaption(isFree, tag, caption, pageable);
+            articles = articleRepository.findAllByIsFreeAndTagAndCaption(isFree, tag, caption, pageable);
         } else if (!StringUtils.isEmpty(tag)) {
-            articles = repository.findAllByIsFreeAndTag(isFree, tag, pageable);
+            articles = articleRepository.findAllByIsFreeAndTag(isFree, tag, pageable);
         } else {
-            articles = repository.findAllByIsFreeAndCaptionContaining(isFree, caption, pageable);
+            articles = articleRepository.findAllByIsFreeAndCaptionContaining(isFree, caption, pageable);
         }
         return convertPage(articles);
     }
@@ -76,5 +85,29 @@ public class ArticleService {
         return new PageImpl<>(articles.getContent().stream()
                 .map(articleMapper::articleToArticleDto)
                 .collect(Collectors.toList()), articles.getPageable(), articles.getTotalElements());
+    }
+
+    @Transactional
+    public ArticleLikeDto likeAnArticle(final ArticleLikeDto likeDto) {
+
+        final Long currentUserId = getCurrentUserId();
+        final Long currentArticleId = likeDto.getArticleId();
+        final Boolean liked = likeDto.getLiked();
+
+        userArticleRepository.getByUserIdAndArticleId(currentUserId, currentArticleId)
+                .ifPresentOrElse(ua -> ua.setLiked(liked),
+                () -> createUserArticle(currentUserId, currentArticleId, liked));
+
+        return likeDto;
+    }
+
+    private void createUserArticle(final Long userId, final Long articleId, final Boolean liked) {
+        userArticleRepository.createNew(userId, articleId, liked);
+    }
+
+    private Long getCurrentUserId() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SpringUserImpl currentUser = (SpringUserImpl) authentication.getPrincipal();
+        return currentUser.getId();
     }
 }
